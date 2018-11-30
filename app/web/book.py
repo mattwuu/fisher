@@ -10,6 +10,7 @@
 from flask import request, jsonify
 
 from app.forms.book import SearchForm
+from app.view_models.book import BookViewModel
 from . import web
 from app.libs.helper import is_isbn_or_key
 from app.spider.book import Book
@@ -29,9 +30,10 @@ def search():
         isbn_or_key = is_isbn_or_key(q)
         if isbn_or_key == 'isbn':
             result = Book.search_by_isbn(q)
+            result = BookViewModel.package_single(result, q)
         else:
             result = Book.search_by_keyword(q, page)
-        # return json.dumps(result), 200, {'content-type': 'application/json'}
+            result = BookViewModel.package_collection(result, q)
         return jsonify(result)
     else:
         return jsonify(form.errors)
