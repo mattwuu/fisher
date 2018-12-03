@@ -10,10 +10,10 @@ from . import web
 def register():
     form = RegisterForm(request.form)
     if request.method == 'POST' and form.validate():
-        user = User()
-        user.set_attrs(form.data)
-        db.session.add(user)
-        db.session.commit()
+        with db.auto_commit():
+            user = User()
+            user.set_attrs(form.data)
+            db.session.add(user)
         return redirect(url_for('web.login'))
         # user.nickname = form.nickname.data
         # user.email
@@ -27,10 +27,10 @@ def login():
         user = User.query.filter_by(email=form.email.data).first()
         if user and user.check_password(form.password.data):
             login_user(user, remember=True)
-            next = request.args.get('next')
-            if not next and not next.startswith('/'):
-                next = url_for('web.index')
-            return redirect(next)
+            next_url = request.args.get('next')
+            if not next_url or not next_url.startswith('/'):
+                next_url = url_for('web.index')
+            return redirect(next_url)
         else:
             flash('账号不存在或密码错误')
     return render_template('auth/login.html', form=form)
