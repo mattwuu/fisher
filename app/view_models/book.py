@@ -15,6 +15,7 @@ class BookViewModel:
         self.pages = book['pages']
         self.author = '、'.join(book['author'])
         self.price = book['price']
+        self.isbn = book['isbn']
         self.summary = book['summary']
         self.image = book['image']
 

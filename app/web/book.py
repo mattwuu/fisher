@@ -49,4 +49,7 @@ def search():
 
 @web.route('/book/<isbn>/detail')
 def book_detail(isbn):
-    pass
+    books_model = Book()
+    books_model.search_by_isbn(isbn)
+    book = BookViewModel(books_model.first)
+    return render_template('book_detail.html', book=book, wishes=[], gifts=[])
