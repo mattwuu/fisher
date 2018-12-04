@@ -29,6 +29,9 @@ class Gift(Base):
     isbn = Column(String(15), nullable=False)
     launched = Column(Boolean, default=False)
 
+    def is_yourself_gift(self, uid):
+        return True if self.uid == uid else False
+
     @classmethod
     def get_wist_count(cls, isbn_list):
         from app.models.wish import Wish
